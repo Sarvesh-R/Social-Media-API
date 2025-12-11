@@ -17,7 +17,7 @@ def follow_user_service(db: Session, current_user: User, username: str):
         raise HTTPException(status_code=404, detail="User not found")
 
     # Check already following
-    existing = db.query(Follow).filter(
+    existing = db.query(Follower).filter(
         Follower.follower_id == current_user.id,
         Follower.following_id == target_user.id
     ).first()
@@ -26,7 +26,7 @@ def follow_user_service(db: Session, current_user: User, username: str):
         raise HTTPException(status_code=400, detail="Already following this user")
 
     # Create follow
-    follow = Follow(
+    follow = Follower(
         follower_id=current_user.id,
         following_id=target_user.id
     )
@@ -44,9 +44,9 @@ def unfollow_user_service(db: Session, current_user: User, username: str):
     if not target_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    follow = db.query(Follow).filter(
-        Follow.follower_id == current_user.id,
-        Follow.following_id == target_user.id
+    follow = db.query(Follower).filter(
+        Follower.follower_id == current_user.id,
+        Follower.following_id == target_user.id
     ).first()
 
     if not follow:
